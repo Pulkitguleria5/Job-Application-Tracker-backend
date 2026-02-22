@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import { authRoutes } from './src/routes/authRoutes.js';
+import { jobRoutes } from './src/routes/jobRoutes.js';
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use(cookieParser());
 
 
 app.use('/auth', authRoutes);
+app.use('/jobs', jobRoutes);
 
 
 
