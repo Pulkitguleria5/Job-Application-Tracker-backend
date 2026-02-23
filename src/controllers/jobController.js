@@ -1,5 +1,5 @@
 
-import { jobDao } from "../dao/jobdao";
+import { jobDao } from "../dao/jobdao.js";
 
 
 export const jobController = {
@@ -7,7 +7,8 @@ export const jobController = {
     createJob: async (req, res) => {
         try {
             const jobData = req.body;
-            jobData.userId = req.user._id;
+            
+            jobData.userId = req.user.id;
             const job = await jobDao.create(jobData);
             res.status(201).json({
                 message: 'Job created successfully',
@@ -24,7 +25,7 @@ export const jobController = {
         try {
             const jobId = req.params.id;
             const jobData = req.body;
-            const userId = req.user._id;
+            const userId = req.user.id;
 
             // Ensure the job belongs to the user
             const job = await jobDao.update(jobId, userId, jobData);
@@ -45,7 +46,7 @@ export const jobController = {
     deleteJob: async (req, res) => {
         try {
             const jobId = req.params.id;
-            const userId = req.user._id;
+            const userId = req.user.id;
 
             // Ensure the job belongs to the user
             const job = await jobDao.delete(jobId, userId);
@@ -65,7 +66,7 @@ export const jobController = {
 
     getJobs: async (req, res) => {
         try {
-            const userId = req.user._id;
+            const userId = req.user.id;
             const page = Number(req.query.page) || 1;
             const limit = Number(req.query.limit) || 10;
             const skip = (page - 1) * limit;
@@ -107,12 +108,13 @@ export const jobController = {
 
     getJobStats: async (req, res) => {
         try {
-            const userId = req.user._id;
+            const userId = req.user.id;
+            
 
             const stats = await jobDao.getJobStats(userId);
             res.status(200).json({
                 message: 'Job stats retrieved successfully',
-                stats
+                stats: stats
             });
         }
         catch (error) {

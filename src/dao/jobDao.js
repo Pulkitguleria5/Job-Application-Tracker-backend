@@ -1,4 +1,5 @@
 import { Job } from '../models/job.js';
+import mongoose from 'mongoose';
 
 export const jobDao = {
     create: async (jobData) => {
@@ -59,7 +60,7 @@ export const jobDao = {
     getJobStats: async (userId) => {
         try {
             const stats = await Job.aggregate([
-                { $match: { userId: userId } },
+                { $match: { userId: new mongoose.Types.ObjectId(userId) } },
                 { $group: { _id: "$status", count: { $sum: 1 } } }
             ]);
             return stats;

@@ -1,5 +1,5 @@
-import { jobController } from "../controllers/jobController";
-import { authMiddleware } from "../middleware/authMiddleware";
+import { jobController } from "../controllers/jobController.js";
+import { authMiddleware } from "../middleware/authMiddleware.js";
 import express from "express";
 
 export const jobRoutes = express.Router();

@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import { authRoutes } from './src/routes/authRoutes.js';
 import { jobRoutes } from './src/routes/jobRoutes.js';
-
+import { resumeRoutes } from './src/routes/resumeRoutes.js';
 dotenv.config();
 
 const app = express();
@@ -28,6 +28,8 @@ app.use(cookieParser());
 
 app.use('/auth', authRoutes);
 app.use('/jobs', jobRoutes);
+app.use('/uploads', express.static('uploads')); // Serve uploaded files statically
+app.use('/resume', resumeRoutes);
 
 
 
