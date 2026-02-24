@@ -1,13 +1,24 @@
 
 import { jobDao } from "../dao/jobdao.js";
+import { resumeDao } from "../dao/resumeDao.js";
 
 
 export const jobController = {
 
     createJob: async (req, res) => {
         try {
+            const { resumeUsed } = req.body;
+
+             // If resumeUsed is provided, validate it belongs to the user
+            if (resumeUsed) {
+                const resume = await resumeDao.findResumeById(resumeUsed, req.user.id);
+                if (!resume) {
+                    return res.status(404).json({ message: 'Resume not found' });
+                }
+            }
+
             const jobData = req.body;
-            
+
             jobData.userId = req.user.id;
             const job = await jobDao.create(jobData);
             res.status(201).json({
@@ -23,19 +34,31 @@ export const jobController = {
 
     updateJob: async (req, res) => {
         try {
+
             const jobId = req.params.id;
             const jobData = req.body;
             const userId = req.user.id;
+
+            // If resumeUsed is being updated, validate it
+            if (jobData.resumeUsed) {
+                const resume = await resumeDao.findResumeById(jobData.resumeUsed, req.user.id);
+                if (!resume) {
+                    return res.status(404).json({ message: 'Resume not found' });
+                }
+            }
+
 
             // Ensure the job belongs to the user
             const job = await jobDao.update(jobId, userId, jobData);
             if (!job) {
                 return res.status(404).json({ message: 'Job not found or not authorized' });
             }
-            res.status(200).json({
+
+             res.status(200).json({
                 message: 'Job updated successfully',
                 job: job
             });
+
         } catch (error) {
             console.log('Error updating job:', error);
             res.status(500).json({ message: 'Error updating job' });
@@ -74,8 +97,8 @@ export const jobController = {
             const search = req.query.search;
             const sortBy = req.query.sortBy || 'createdAt';
             const order = req.query.order === 'asc' ? 1 : -1;
-            
-            const query = { userId : userId };
+
+            const query = { userId: userId };
             if (status) {
                 query.status = status;
             }
@@ -86,7 +109,7 @@ export const jobController = {
                 ];
             }
 
-            const [jobs,total] = await jobDao.getJobs(query, sortBy, order, skip, limit);
+            const [jobs, total] = await jobDao.getJobs(query, sortBy, order, skip, limit);
             res.status(200).json({
                 message: 'Jobs retrieved successfully',
                 jobs: jobs,
@@ -109,7 +132,7 @@ export const jobController = {
     getJobStats: async (req, res) => {
         try {
             const userId = req.user.id;
-            
+
 
             const stats = await jobDao.getJobStats(userId);
             res.status(200).json({
