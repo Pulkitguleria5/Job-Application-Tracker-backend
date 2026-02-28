@@ -1,5 +1,5 @@
 
-import { jobDao } from "../dao/jobdao.js";
+import { jobDao } from "../dao/jobDao.js";
 import { resumeDao } from "../dao/resumeDao.js";
 
 
@@ -9,7 +9,7 @@ export const jobController = {
         try {
             const { resumeUsed } = req.body;
 
-             // If resumeUsed is provided, validate it belongs to the user
+            // If resumeUsed is provided, validate it belongs to the user
             if (resumeUsed) {
                 const resume = await resumeDao.findResumeById(resumeUsed, req.user.id);
                 if (!resume) {
@@ -54,7 +54,7 @@ export const jobController = {
                 return res.status(404).json({ message: 'Job not found or not authorized' });
             }
 
-             res.status(200).json({
+            res.status(200).json({
                 message: 'Job updated successfully',
                 job: job
             });

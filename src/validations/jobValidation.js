@@ -1,6 +1,6 @@
 import { body, query } from 'express-validator';
 
-export const JobValidation = {
+export const jobValidation = {
     createJob: [
         body('company')
             .trim()

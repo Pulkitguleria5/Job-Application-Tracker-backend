@@ -1,5 +1,5 @@
 import {body} from 'express-validator';
-import { upload } from '../middleware/uploadMiddleware';
+
 
 export const ResumeValidation = {
     uploadResume: [

@@ -1,4 +1,4 @@
-import {userDao} from '../dao/userDao.js';
+import { userDao } from '../dao/userDao.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { OAuth2Client } from 'google-auth-library';
@@ -102,8 +102,8 @@ export const authController = {
 
     googleSso: async (req, res) => {
 
-        try{
-            const { idToken } = req.body;
+        try {
+            const { credential: idToken } = req.body;
             if (!idToken) {
                 return res.status(400).json({ message: 'Token ID is required.' });
             }

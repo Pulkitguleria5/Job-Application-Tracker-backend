@@ -13,4 +13,8 @@ authRoutes.post('/login', authValidation.login, validate, authController.login);
 authRoutes.post('/logout', authMiddleware.protect, authController.logout);
 authRoutes.post('/google-sso', authValidation.google, validate, authController.googleSso);
 
+authRoutes.get("/me", authMiddleware.protect, (req, res) => {
+  res.json(req.user);
+});
+
 

@@ -1,48 +1,48 @@
-import { get } from "mongoose";
 import { resumeDao } from "../dao/resumeDao.js";
-import { upload } from "../middleware/uploadMiddleware.js";
-import fs from 'fs';
-import path from 'path';
+import cloudinary from "../config/cloudinary.js";
 
 export const resumeController = {
     uploadResume: async (req, res) => {
         try {
-              if (!req.file) {
-            return res.status(400).json({ message: 'No file uploaded' });
-        }
+            if (!req.file) {
+                return res.status(400).json({ message: 'No file uploaded' });
+            }
 
-        const resumeData = {
-            userId: req.user.id,  // Assuming user ID is available in req.user from auth middleware
-            title: req.body.title,   // Assuming title is sent in the request body
-            fileUrl: `/uploads/${req.file.filename}` // URL to access the uploaded file
-        };
+            const resumeData = {
+                userId: req.user.id,  // Assuming user ID is available in req.user from auth middleware
+                title: req.body.title,   // Assuming title is sent in the request body
+                fileUrl: req.file.path, // cloudinary url
+                publicId: req.file.filename  // cloudinary public_id
+            };
 
-        const resume = await resumeDao.createResume(resumeData);
-        res.status(201).json({
-            message: 'Resume uploaded successfully',
-            resume
-        });
+            const resume = await resumeDao.createResume(resumeData);
+            res.status(201).json({
+                message: 'Resume uploaded successfully',
+                resume
+            });
         } catch (error) {
             console.error('Error uploading resume:', error);
-            res.status(500).json({ message: 'Server error while uploading resume',
+            res.status(500).json({
+                message: 'Server error while uploading resume',
                 error: error.message
-             });
+            });
         }
     },
 
     getResumes: async (req, res) => {
         try {
             const resumes = await resumeDao.getResumeByUserId(req.user.id);
-            res.status(200).json({ 
+            res.status(200).json({
                 message: 'Resumes fetched successfully',
-                resumes 
+                resumes
             });
         }
         catch (error) {
             console.error('Error fetching resumes:', error);
-            res.status(500).json({ message: 'Server error while fetching resumes',
+            res.status(500).json({
+                message: 'Server error while fetching resumes',
                 error: error.message
-             });
+            });
         }
     },
 
@@ -54,11 +54,21 @@ export const resumeController = {
             }
 
             // Delete the file from the filesystem
-            const filePath = path.join("uploads", path.basename(resume.fileUrl));
+            // const filePath = path.join("uploads", path.basename(resume.fileUrl));
 
-            if (fs.existsSync(filePath)) {
-                await fs.promises.unlink(filePath);
-            }
+            // if (fs.existsSync(filePath)) {
+            //     await fs.promises.unlink(filePath);
+            // }
+
+            // await resumeDao.deleteResumeById(resume._id);
+
+            // res.status(200).json({ message: 'Resume deleted successfully' });
+
+
+
+            await cloudinary.uploader.destroy(resume.publicId, {
+                resource_type: 'raw'
+            });
 
             await resumeDao.deleteResumeById(resume._id);
 
@@ -66,9 +76,10 @@ export const resumeController = {
 
         } catch (error) {
             console.error('Error deleting resume:', error);
-            res.status(500).json({ message: 'Server error while deleting resume',
+            res.status(500).json({
+                message: 'Server error while deleting resume',
                 error: error.message
-             });
+            });
         }
     },
 
@@ -86,15 +97,17 @@ export const resumeController = {
                 return res.status(404).json({ message: 'Resume not found' });
             }
 
-            res.status(200).json({ message: 'Resume title updated successfully',
+            res.status(200).json({
+                message: 'Resume title updated successfully',
                 resume: updatedResume
-             });
+            });
         }
         catch (error) {
             console.error('Error updating resume title:', error);
-            res.status(500).json({ message: 'Server error while updating resume title', 
+            res.status(500).json({
+                message: 'Server error while updating resume title',
                 error: error.message
-             });
+            });
         }
     }
 };
@@ -102,9 +115,8 @@ export const resumeController = {
 
 
 
-               
 
 
 
 
-    
+

@@ -4,11 +4,11 @@ const jobSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true , index: true},
     company : { type: String, required: true ,trim: true},
     role : { type: String, required: true ,trim: true},
-    joburl : { type: String, required: false ,trim: true},
+    jobUrl : { type: String, required: false ,trim: true},
     salaryRange : { type: String, required: false ,trim: true},
     status : { type: String, enum: ['Applied', 'Interviewing', 'Offered', 'Rejected'], default: 'Applied',index: true},
     notes : { type: String},
-    AppliedDate : { type: Date, default: Date.now},
+    appliedDate : { type: Date, default: Date.now},
     followUpDate : { type: Date ,index: true},
     resumeUsed : { type: mongoose.Schema.Types.ObjectId, ref: 'Resume' },
 

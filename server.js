@@ -1,12 +1,12 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import { authRoutes } from './src/routes/authRoutes.js';
 import { jobRoutes } from './src/routes/jobRoutes.js';
 import { resumeRoutes } from './src/routes/resumeRoutes.js';
-dotenv.config();
+import cloudinary from './src/config/cloudinary.js';
 
 const app = express();
 

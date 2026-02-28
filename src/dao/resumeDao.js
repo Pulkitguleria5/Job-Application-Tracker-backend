@@ -1,4 +1,3 @@
-import { upload } from "../middleware/uploadMiddleware.js";
 import { Resume } from "../models/resume.js";
 
 export const resumeDao = {
@@ -18,7 +17,7 @@ export const resumeDao = {
         }
     },
 
-    findResumeById: async (id,userId) => {
+    findResumeById: async (id, userId) => {
         try {
             return await Resume.findOne({ _id: id, userId });
         } catch (error) {
@@ -36,8 +35,8 @@ export const resumeDao = {
 
     updateResumeById: async (id, userId, title) => {
         try {
-            return await Resume.findOneAndUpdate({ _id: id, userId }, 
-                { title }, 
+            return await Resume.findOneAndUpdate({ _id: id, userId },
+                { title },
                 { new: true }
             );
         } catch (error) {
