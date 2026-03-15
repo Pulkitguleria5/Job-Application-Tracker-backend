@@ -70,7 +70,8 @@ export const authController = {
                 httpOnly: true,
                 secure: true,
                 domain: 'localhost',
-                path: '/'
+                path: '/',
+                // maxAge: 60 * 60 * 1000  // 1 hour, matches JWT expiry
             });
 
             return res.json({
@@ -89,7 +90,12 @@ export const authController = {
     logout: (req, res) => {
 
         try {
-            res.clearCookie('jwt');
+            res.clearCookie('jwt', {
+                httpOnly: true,
+                secure: true,
+                domain: 'localhost',
+                path: '/'
+            });
             return res.json({ message: 'Logout successful' });
         }
         catch (error) {
@@ -140,7 +146,8 @@ export const authController = {
                 httpOnly: true,
                 secure: true,
                 domain: 'localhost',
-                path: '/'
+                path: '/',
+                // maxAge: 60 * 60 * 1000  // 1 hour, matches JWT expiry
             });
 
             return res.json({

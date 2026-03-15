@@ -13,17 +13,17 @@ export const jobDao = {
     },
 
     update: async (jobId, userId, jobData) => {
-    try {
-        return await Job.findOneAndUpdate(
-            { _id: jobId, userId: userId },
-            { $set: jobData },
-            { new: true }
-        );
-    } catch (error) {
-        console.log('Error updating job:', error);
-        throw error;
-    }
-},
+        try {
+            return await Job.findOneAndUpdate(
+                { _id: jobId, userId: userId },
+                { $set: jobData },
+                { new: true }
+            );
+        } catch (error) {
+            console.log('Error updating job:', error);
+            throw error;
+        }
+    },
 
     delete: async (jobId, userId) => {
         try {
@@ -37,17 +37,17 @@ export const jobDao = {
     },
 
 
-    getJobs : async (query, sortBy, order, skip, limit) => {
+    getJobs: async (query, sortBy, order, skip, limit) => {
         try {
-            const [jobs,total] = await Promise.all([
+            const [jobs, total] = await Promise.all([
                 Job.find(query)
                     .sort({ [sortBy]: order })
                     .skip(skip)
                     .limit(limit)
                     .populate('resumeUsed', 'title'), // Populate resumeUsed with only the title field
 
-                    // Get total count for pagination
-                      Job.countDocuments(query)
+                // Get total count for pagination
+                Job.countDocuments(query)
             ]);
 
             return [jobs, total];
@@ -69,6 +69,50 @@ export const jobDao = {
             throw error;
         }
     },
+
+
+    getResumeStats: async (userId) => {
+        try {
+
+            const stats = await Job.aggregate([
+                {
+                    $match: {
+                        userId: new mongoose.Types.ObjectId(userId),
+                        resumeUsed: { $ne: null }
+                    }
+                },
+                {
+                    $group: {
+                        _id: "$resumeUsed",
+                        applications: { $sum: 1 }
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "resumes",
+                        localField: "_id",
+                        foreignField: "_id",
+                        as: "resume"
+                    }
+                },
+                { $unwind: "$resume" },
+                {
+                    $project: {
+                        _id: 0,
+                        resumeId: "$resume._id",
+                        title: "$resume.title",
+                        applications: 1
+                    }
+                }
+            ]);
+
+            return stats;
+
+        } catch (error) {
+            console.log("Error getting resume stats:", error);
+            throw error;
+        }
+    }
 
 };
 

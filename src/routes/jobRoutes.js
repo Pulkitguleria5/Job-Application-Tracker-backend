@@ -12,5 +12,7 @@ jobRoutes.get('/get-jobs', authMiddleware.protect,jobValidation.getJobs, validat
 jobRoutes.get('/stats', authMiddleware.protect, jobController.getJobStats);
 jobRoutes.put('/:id', authMiddleware.protect, jobController.updateJob);
 jobRoutes.delete('/:id', authMiddleware.protect, jobController.deleteJob);
+
+jobRoutes.get("/resume-stats", authMiddleware.protect, jobController.getResumeStats);
    
 

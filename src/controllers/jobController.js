@@ -146,6 +146,24 @@ export const jobController = {
         }
     },
 
+    getResumeStats: async (req, res) => {
+        try {
+
+            const userId = req.user.id;
+
+            const stats = await jobDao.getResumeStats(userId);
+
+            res.status(200).json({
+                message: "Resume stats retrieved successfully",
+                stats
+            });
+
+        } catch (error) {
+            console.log("Error getting resume stats:", error);
+            res.status(500).json({ message: "Error getting resume stats" });
+        }
+    }
+
 }
 
 
