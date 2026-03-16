@@ -30,9 +30,10 @@ export const authController = {
                 password: hashedPassword
             });
 
+            const { password: _pw, ...safeUser } = newUser.toObject();
             res.status(201).json({
                 message: 'User registered successfully',
-                user: newUser
+                user: safeUser
             });
 
         } catch (error) {
@@ -74,9 +75,10 @@ export const authController = {
                 // maxAge: 60 * 60 * 1000  // 1 hour, matches JWT expiry
             });
 
+            const { password: _pw, ...safeUser } = user.toObject();
             return res.json({
                 message: 'Login successful',
-                user: user
+                user: safeUser
             });
         }
         catch (error) {
@@ -150,9 +152,10 @@ export const authController = {
                 // maxAge: 60 * 60 * 1000  // 1 hour, matches JWT expiry
             });
 
+            const { password: _pw, ...safeUser } = user.toObject();
             return res.json({
                 message: 'Google SSO successful',
-                user: user
+                user: safeUser
             });
         }
         catch (error) {
