@@ -67,12 +67,14 @@ export const authController = {
                 { expiresIn: '1h' }
             );
 
+            const isProduction = process.env.NODE_ENV === 'production';
             res.cookie('jwt', token, {
                 httpOnly: true,
-                secure: true,
+                secure: isProduction,       // false on localhost (HTTP)
+                sameSite: isProduction ? 'None' : 'Lax',
                 domain: 'localhost',
                 path: '/',
-                // maxAge: 60 * 60 * 1000  // 1 hour, matches JWT expiry
+                maxAge: 60 * 60 * 1000      // 1 hour
             });
 
             const { password: _pw, ...safeUser } = user.toObject();
@@ -144,12 +146,14 @@ export const authController = {
                 { expiresIn: '1h' }
             );
 
+            const isProduction = process.env.NODE_ENV === 'production';
             res.cookie('jwt', token, {
                 httpOnly: true,
-                secure: true,
+                secure: isProduction,
+                sameSite: isProduction ? 'None' : 'Lax',
                 domain: 'localhost',
                 path: '/',
-                // maxAge: 60 * 60 * 1000  // 1 hour, matches JWT expiry
+                maxAge: 60 * 60 * 1000
             });
 
             const { password: _pw, ...safeUser } = user.toObject();

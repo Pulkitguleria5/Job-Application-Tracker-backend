@@ -26,7 +26,16 @@ export const jobValidation = {
         body('jobUrl')
             .optional()
             .isURL()
-            .withMessage('Invalid URL format for jobUrl')
+            .withMessage('Invalid URL format for jobUrl'),
+
+        body('location')
+            .optional()
+            .trim(),
+
+        body('jobType')
+            .optional()
+            .isIn(['Full-time', 'Part-time', 'Internship', 'Contract', 'Remote', 'Hybrid'])
+            .withMessage('Invalid job type'),
     ],
 
     getJobs: [

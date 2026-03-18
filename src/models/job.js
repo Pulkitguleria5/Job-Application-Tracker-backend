@@ -5,6 +5,8 @@ const jobSchema = new mongoose.Schema({
     company : { type: String, required: true ,trim: true},
     role : { type: String, required: true ,trim: true},
     jobUrl : { type: String, required: false ,trim: true},
+    location : { type: String, required: false, trim: true },
+    jobType : { type: String, enum: ['Full-time', 'Part-time', 'Internship', 'Contract', 'Remote', 'Hybrid'], required: false },
     salaryRange : { type: String, required: false ,trim: true},
     status : { type: String, enum: ['Applied', 'Interviewing', 'Offered', 'Rejected'], default: 'Applied',index: true},
     notes : { type: String},

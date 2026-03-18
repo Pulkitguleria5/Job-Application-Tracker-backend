@@ -29,10 +29,8 @@ const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
         folder: 'careerflow_resumes',
-        resource_type: 'raw', // Treat as raw file to allow PDF uploads
-        format: async () => 'pdf', // Ensure the file is stored as PDF
-        public_id: (req, file) => Date.now().toString(),
-
+        resource_type: 'auto', // Treat as raw file to allow PDF uploads
+        public_id: (req, file) => `${Date.now()}.pdf`, // Append .pdf so Cloudinary knows the type
     },
 });
 
@@ -40,4 +38,3 @@ export const upload = multer({
     storage,
     limits: { fileSize: 5 * 1024 * 1024 } // 5MB max
 });
-

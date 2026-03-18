@@ -15,8 +15,21 @@ mongoose.connect(process.env.MONGO_URI)
     .catch((err) => console.error('Error connecting to MongoDB:', err));
 
 
+const ALLOWED_ORIGINS = [
+    'http://localhost:5173',
+    'http://localhost:3000',
+];
+
 const corsOptions = {
-    origin: 'http://localhost:5173', // Allow requests from this origin
+    origin: (origin, callback) => {
+        // Allow requests with no origin (e.g. curl, Postman)
+        if (!origin) return callback(null, true);
+        // Allow the frontend and any Chrome extension
+        if (ALLOWED_ORIGINS.includes(origin) || origin.startsWith('chrome-extension://')) {
+            return callback(null, true);
+        }
+        return callback(new Error(`CORS: Origin ${origin} not allowed`));
+    },
     credentials: true, // Allow cookies to be sent
 };
 
