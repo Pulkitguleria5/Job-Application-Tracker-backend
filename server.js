@@ -18,6 +18,7 @@ mongoose.connect(process.env.MONGO_URI)
 const ALLOWED_ORIGINS = [
     'http://localhost:5173',
     'http://localhost:3000',
+    'https://job-application-tracker-frontend-4j.vercel.app'
 ];
 
 const corsOptions = {
