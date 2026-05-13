@@ -156,7 +156,7 @@ export const authController = {
                 maxAge: 60 * 60 * 1000
             });
 
-            const { password: _pw, ...safeUser } = user.toObject();
+            const { password: _pw, ...safeUser } = user.toObject(); 
             return res.json({
                 message: 'Google SSO successful',
                 user: safeUser

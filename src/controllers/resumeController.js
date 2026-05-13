@@ -1,5 +1,7 @@
 import { resumeDao } from "../dao/resumeDao.js";
 import cloudinary from "../config/cloudinary.js";
+import https from "https";
+import http from "http";
 
 export const resumeController = {
     uploadResume: async (req, res) => {
@@ -84,8 +86,32 @@ export const resumeController = {
     },
 
 
-    updateResumeTitle: async (req, res) => {
+    viewResume: async (req, res) => {
         try {
+            const resume = await resumeDao.findResumeById(req.params.id, req.user.id);
+            if (!resume) {
+                return res.status(404).json({ message: 'Resume not found' });
+            }
+
+            const fileUrl = resume.fileUrl;
+            const protocol = fileUrl.startsWith('https') ? https : http;
+
+            protocol.get(fileUrl, (stream) => {
+                res.setHeader('Content-Type', 'application/pdf');
+                res.setHeader('Content-Disposition', 'inline');
+                stream.pipe(res);
+            }).on('error', (err) => {
+                console.error('Error fetching PDF from Cloudinary:', err);
+                res.status(500).json({ message: 'Failed to fetch resume' });
+            });
+
+        } catch (error) {
+            console.error('Error viewing resume:', error);
+            res.status(500).json({ message: 'Server error', error: error.message });
+        }
+    },
+
+    updateResumeTitle: async (req, res) => {        try {
             const { title } = req.body;
 
             if (!title) {
@@ -111,12 +137,3 @@ export const resumeController = {
         }
     }
 };
-
-
-
-
-
-
-
-
-

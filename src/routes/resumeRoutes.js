@@ -9,5 +9,6 @@ export const resumeRoutes = express.Router();
 
 resumeRoutes.post('/upload', authMiddleware.protect, upload.single('resume'), ResumeValidation.uploadResume, validate, resumeController.uploadResume);
 resumeRoutes.get('/get-resume', authMiddleware.protect, resumeController.getResumes);
+resumeRoutes.get('/view/:id', authMiddleware.protect, resumeController.viewResume);
 resumeRoutes.delete('/:id', authMiddleware.protect, resumeController.deleteResume);
 resumeRoutes.patch('/:id', authMiddleware.protect, resumeController.updateResumeTitle);
